@@ -1,0 +1,54 @@
+/* some colors you may find useful:
+  #115ff4
+  #060ce9
+  #28a200
+  #8d2ab5
+  #74119c
+*/
+
+body {
+  background-color: #000000;
+  font-family: 'Copse', sans-serif;
+  color: white;
+  text-align: center;
+}
+
+header{
+
+  font-size: 50px;
+  text-align: center;
+  font-family: 'Copse', sans-serif;
+  
+}
+
+button{
+  width: 100px;
+  height: 30px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+#jeopardy{
+  position:fixed;
+  display: none;
+  width: 100%;
+  table-layout: fixed;
+  border: 5px solid white;
+  background-color: #060ce9;
+  width: 99%;
+}
+thead {
+  font-size: 40px;
+}
+
+#jeopardy tbody td {
+  padding: 30px;
+  border-radius: 4px;
+  background-color: #060ce9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 25px;
+}
+
+button{
+  background-color: yellow;
+}
