@@ -133,14 +133,14 @@ async function fillTable() {
       const questionCell = document.createElement("td");
       const clues = catData[catId].clues;
 
-      // Add the question number as a placeholder
+      
       questionCell.textContent = questionNumber;
 
-      // Attach a click event listener to each question cell
+      
       questionCell.addEventListener("click", function () {
-        // Replace the number with the actual question
+        
         questionCell.textContent = clues[i].question;
-        // Remove the click event listener
+        
         questionCell.removeEventListener("click", arguments.callee);
       });
 
@@ -148,7 +148,7 @@ async function fillTable() {
     }
 
     tbody.appendChild(catRow);
-    questionNumber += 100; // Increment the question number for the next row
+    questionNumber += 100; 
   }
 
   table.appendChild(tbody);
@@ -189,11 +189,11 @@ function handleClick(evt) {
  */
 
 function showLoadingView() {
-  // Clear the current Jeopardy board
+  
   const table = document.querySelector("#jeopardy");
   table.innerHTML = "";
 
-  // Show the loading spinner
+  
   const spinnerContainer = document.createElement("div");
   spinnerContainer.id = "spin-container";
   const spinnerIcon = document.createElement("i");
@@ -201,7 +201,7 @@ function showLoadingView() {
   spinnerContainer.appendChild(spinnerIcon);
   document.body.appendChild(spinnerContainer);
 
-  // Disable the fetch data button
+  
   const button = document.querySelector("#start");
   
   button.disabled = true;
@@ -211,13 +211,13 @@ function showLoadingView() {
 /** Remove the loading spinner and update the button used to fetch data. */
 
 function hideLoadingView() {
-  // Remove the loading spinner
+  
   const spinnerContainer = document.querySelector("#spin-container");
   if (spinnerContainer) {
     spinnerContainer.remove();
   }
 
-  // Enable the fetch data button
+  
   const button = document.querySelector("#start");
   button.textContent = "Restart Game";
   button.disabled = false;
