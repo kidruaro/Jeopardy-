@@ -21,39 +21,38 @@
 let categories = [];
 let catTitle = [];
 let catData = {};
-let count = 0;
+
 
 const tbody = document.createElement("tbody");
 const table = document.querySelector("#jeopardy");
 jservURL = "http://jservice.io/";
 const button = document.querySelector("#start");
 const NUM_QUESTIONS_PER_CAT = 5;
+$("#spin-container").hide();
 
 /** Get NUM_CATEGORIES random category from API.
  *
  * Returns array of category ids
  */
 
-async function getCategoryIds(count) {
+async function getCategoryIds() {
   const response = await axios({
     baseURL: jservURL,
-    url: `/api/categories?count=${count}`,
+    url: `/api/categories?count=100`,
     method: "GET",
   });
 
   const allCategories = response.data;
   const randomCategories = [];
 
-  while (randomCategories.length < count) {
+  while (randomCategories.length < 6) {
     const randomIndex = Math.floor(Math.random() * allCategories.length);
     const randomCategory = allCategories[randomIndex];
     if (!randomCategories.includes(randomCategory.id)) {
       randomCategories.push(randomCategory.id);
     }
+    console.log(randomCategory.id);
   }
-
-  await Promise.all(randomCategories.map(getCategory));
-
   return randomCategories;
 }
 
@@ -108,7 +107,7 @@ async function getCategory(catId) {
  */
 
 async function fillTable() {
-
+  tbody.innerHTML = "";
   const table = document.querySelector("#jeopardy");
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
@@ -133,14 +132,9 @@ async function fillTable() {
       const questionCell = document.createElement("td");
       const clues = catData[catId].clues;
 
-      
       questionCell.textContent = questionNumber;
-
-      
       questionCell.addEventListener("click", function () {
-        
         questionCell.textContent = clues[i].question;
-        
         questionCell.removeEventListener("click", arguments.callee);
       });
 
@@ -148,12 +142,11 @@ async function fillTable() {
     }
 
     tbody.appendChild(catRow);
-    questionNumber += 100; 
+    questionNumber += 100;
   }
 
   table.appendChild(tbody);
 }
-
 
 
 /** Handle clicking on a clue: show the question or answer.
@@ -170,10 +163,10 @@ function handleClick(evt) {
   const colIndex = [...row.children].indexOf(cell);
 
   const categoryIndex = [...row.parentNode.children].indexOf(row);
-  const categoryId = Object.keys(catData)[categoryIndex];
+  const categoryId = Object.keys(catData)[colIndex];
   const clues = catData[categoryId].clues;
 
-  const clue = clues[colIndex];
+  const clue = clues[categoryIndex];
 
   if (!clue.showing) {
     cell.textContent = clue.question;
@@ -189,40 +182,24 @@ function handleClick(evt) {
  */
 
 function showLoadingView() {
-  
   const table = document.querySelector("#jeopardy");
   table.innerHTML = "";
-
-  
-  const spinnerContainer = document.createElement("div");
-  spinnerContainer.id = "spin-container";
-  const spinnerIcon = document.createElement("i");
-  spinnerIcon.className = "fa fa-spin fa-spinner";
-  spinnerContainer.appendChild(spinnerIcon);
-  document.body.appendChild(spinnerContainer);
-
-  
+  $("#spin-container").show();
+  $("#show-container").show();
   const button = document.querySelector("#start");
-  
   button.disabled = true;
 }
-
 
 /** Remove the loading spinner and update the button used to fetch data. */
 
 function hideLoadingView() {
-  
-  const spinnerContainer = document.querySelector("#spin-container");
-  if (spinnerContainer) {
-    spinnerContainer.remove();
-  }
-
-  
+  $("#spin-container").hide();
+  $("#show-container").remove();
   const button = document.querySelector("#start");
+
   button.textContent = "Restart Game";
   button.disabled = false;
 }
-
 
 /** Start game:
  *
@@ -233,27 +210,30 @@ function hideLoadingView() {
  * */
 
 async function setupAndStart() {
-  const ids = await getCategoryIds(6);
-  console.log(catData);
-  await Promise.all(
-    ids.map(async function (id) {
-      const Data = await getCategory(id);
-      
-      catData[id] = Data;
-    })
-  );
+  const ids = await getCategoryIds();
+  
+  for (let i = 0; i < ids.length; i++) {
+    const id = ids[i];
+    const data = await getCategory(id);
+    catData[i] = data;
+  }
 
   fillTable();
 }
-
 /** On click of start / restart button, set up game. */
 
 // TODO
 button.addEventListener("click", () => {
-  
-  setupAndStart();
+  showLoadingView();
+  setupAndStart()
   hideLoadingView();
 });
 /** On page load, add event handler for clicking clues */
 tbody.addEventListener("click", handleClick);
 // TODO
+
+/*
+
+
+
+*/
